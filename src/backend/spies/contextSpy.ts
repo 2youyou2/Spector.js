@@ -103,6 +103,10 @@ export class ContextSpy {
     }
 
     public startCapture(maxCommands = 0, quickCapture = false, fullCapture = false): void {
+        if (this.capturing) {
+            return;
+        }
+        
         const startTime = Time.now;
         this.maxCommands = maxCommands;
 

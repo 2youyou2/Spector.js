@@ -18,7 +18,8 @@ export class RecorderSpy {
         this.initRecorders();
     }
 
-    public recordCommand(functionInformation: IFunctionInformation): void {
+    public recordCommand (functionInformation: IFunctionInformation): void {
+        // console.log('functionInformation.name : ' + functionInformation.name);
         const callbacks = this.onCommandCallbacks[functionInformation.name];
         if (callbacks) {
             for (const callback of callbacks) {

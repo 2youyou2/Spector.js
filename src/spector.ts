@@ -99,7 +99,10 @@ export class Spector {
         this.timeSpy.onError.add(this.onErrorInternal, this);
     }
 
-    public displayUI(disableTracking: boolean = false) {
+    public displayUI (disableTracking: boolean = false,
+        commandCount = 0,
+        quickCapture: boolean = false,
+        fullCapture: boolean = false) {
         if (!this.captureMenu) {
             this.getCaptureUI();
 
@@ -108,7 +111,7 @@ export class Spector {
             this.captureMenu.onPlayNextFrameRequested.add(this.playNextFrame, this);
             this.captureMenu.onCaptureRequested.add((info) => {
                 if (info) {
-                    this.captureCanvas(info.ref);
+                    this.captureCanvas(info.ref, commandCount, quickCapture, fullCapture);
                 }
             }, this);
 
@@ -288,7 +291,9 @@ export class Spector {
         }
     }
 
-    public captureContextSpy(contextSpy: ContextSpy,
+    captureFrameCount = 1;
+
+    public captureContextSpy (contextSpy: ContextSpy,
         commandCount = 0,
         quickCapture: boolean = false,
         fullCapture: boolean = false): void {
@@ -310,7 +315,7 @@ export class Spector {
             }
             else {
                 // Capture only one frame.
-                this.captureFrames(1);
+                this.captureFrames(this.captureFrameCount);
             }
 
             this.noFrameTimeout = setTimeout(() => {

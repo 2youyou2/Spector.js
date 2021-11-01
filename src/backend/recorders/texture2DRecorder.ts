@@ -60,8 +60,8 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
         return customData.length;
     }
 
-    protected update(functionInformation: IFunctionInformation, target: string, instance: WebGLTexture): number {
-        if (functionInformation.arguments.length >= 2 && functionInformation.arguments[1] !== 0) {
+    protected update (functionInformation: IFunctionInformation, target: string, instance: WebGLTexture): number {
+        if (functionInformation.arguments.length >= 2 && functionInformation.arguments[1] > 1) {
             return 0;
         }
 

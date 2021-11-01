@@ -39,6 +39,10 @@ export class ReadPixelsHelper {
         if (type === WebGlConstants.UNSIGNED_BYTE.value) {
             pixels = new Uint8Array(size);
         }
+        else if (type === 35863/*gl.UNSIGNED_NORMALIZED*/) {
+            type = gl.UNSIGNED_BYTE;
+            pixels = new Uint8Array(size);
+        }
         else {
             type = WebGlConstants.FLOAT.value;
             pixels = new Float32Array(size);
