@@ -87,10 +87,10 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
             // Float textures is not a rare case
             // WebGL1 does not have RGBA32F, RGBA16F, we need to look in `type` field
             if (internalFormat === WebGlConstants.RGBA.value) {
-                if (customData.type === WebGlConstants.FLOAT.value)  {
+                if (customData.type === WebGlConstants.FLOAT.value) {
                     internalFormat = WebGlConstants.RGBA32F.value;
                 }
-                if (customData.type === WebGlConstants.HALF_FLOAT_OES.value)  {
+                if (customData.type === WebGlConstants.HALF_FLOAT_OES.value) {
                     internalFormat = WebGlConstants.RGBA16F.value;
                 }
             }
@@ -118,8 +118,28 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
         return undefined;
     }
 
-    private getTexStorage2DCustomData(functionInformation: IFunctionInformation, target: string, instance: WebGLTexture): ITextureRecorderData {
+    private getTexStorage2DCustomData (functionInformation: IFunctionInformation, target: string, instance: WebGLTexture): ITextureRecorderData {
         let customData: ITextureRecorderData;
+
+        let internalFormat = functionInformation.arguments[2];
+
+        let type = 0;
+        if (internalFormat === WebGlConstants.RGBA8.value) {
+            type = WebGlConstants.UNSIGNED_BYTE.value;
+        }
+        else if (internalFormat === WebGlConstants.RGBA32F.value) {
+            type = WebGlConstants.FLOAT.value;
+        }
+        else if (internalFormat === WebGlConstants.RGBA16F.value) {
+            type = WebGlConstants.HALF_FLOAT.value;
+        }
+        else if (internalFormat === WebGlConstants.DEPTH32F_STENCIL8.value) {
+            type = WebGlConstants.FLOAT_32_UNSIGNED_INT_24_8_REV.value;
+        }
+        else {
+            debugger;
+        }
+
         if (functionInformation.arguments.length === 5) {
             // Custom data required to display the texture.
             customData = {
@@ -130,6 +150,7 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
                 height: functionInformation.arguments[4],
                 length: 0,
                 isCompressed: false,
+                type,
             };
         }
 
