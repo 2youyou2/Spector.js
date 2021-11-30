@@ -62,9 +62,9 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
     }
 
     protected update (functionInformation: IFunctionInformation, target: string, instance: WebGLTexture): number {
-        if (functionInformation.arguments.length >= 2 && functionInformation.arguments[1] > 1) {
-            return 0;
-        }
+        // if (functionInformation.arguments.length >= 2 && functionInformation.arguments[1] > 1) {
+        //     return 0;
+        // }
 
         const customData = this.getCustomData(functionInformation, target, instance);
         if (!customData) {
@@ -133,7 +133,7 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
         else if (internalFormat === WebGlConstants.RGBA16F.value) {
             type = WebGlConstants.HALF_FLOAT.value;
         }
-        else if (internalFormat === WebGlConstants.DEPTH32F_STENCIL8.value) {
+        else if (internalFormat === WebGlConstants.DEPTH32F_STENCIL8.value || internalFormat === WebGlConstants.DEPTH24_STENCIL8.value) {
             type = WebGlConstants.FLOAT_32_UNSIGNED_INT_24_8_REV.value;
         }
         else {
