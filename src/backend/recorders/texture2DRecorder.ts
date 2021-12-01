@@ -136,6 +136,9 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
         else if (internalFormat === WebGlConstants.DEPTH32F_STENCIL8.value || internalFormat === WebGlConstants.DEPTH24_STENCIL8.value) {
             type = WebGlConstants.FLOAT_32_UNSIGNED_INT_24_8_REV.value;
         }
+        else if (internalFormat === WebGlConstants.R8.value) {
+            type = WebGlConstants.UNSIGNED_BYTE.value;
+        }
         else {
             debugger;
         }
