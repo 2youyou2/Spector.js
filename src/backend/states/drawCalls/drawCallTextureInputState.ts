@@ -53,7 +53,7 @@ export class DrawCallTextureInputState {
         this.fullCapture = fullCapture;
 
         if (!customData.type) {
-            debugger;
+            // debugger;
         }
 
         if (customData.type) {

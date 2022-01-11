@@ -140,7 +140,7 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
             type = WebGlConstants.UNSIGNED_BYTE.value;
         }
         else {
-            debugger;
+            // debugger;
         }
 
         if (functionInformation.arguments.length === 5) {
