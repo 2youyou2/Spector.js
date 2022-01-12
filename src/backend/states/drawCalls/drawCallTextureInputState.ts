@@ -25,7 +25,7 @@ export class DrawCallTextureInputState {
 
     private fullCapture: boolean;
 
-    constructor(options: IContextInformation) {
+    constructor (options: IContextInformation) {
         this.context = options.context;
         this.captureFrameBuffer = options.context.createFramebuffer();
         this.workingCanvas = document.createElement("canvas");
@@ -39,7 +39,7 @@ export class DrawCallTextureInputState {
         (this.captureContext2D as any).msImageSmoothingEnabled = true;
     }
 
-    public appendTextureState(state: any, storage: WebGLTexture, target: WebGlConstant = null, fullCapture: boolean): void {
+    public appendTextureState (state: any, storage: WebGLTexture, target: WebGlConstant = null, fullCapture: boolean): void {
         if (!storage) {
             return;
         }
@@ -78,7 +78,7 @@ export class DrawCallTextureInputState {
         }
     }
 
-    protected getTextureVisualState(target: WebGlConstant, storage: WebGLTexture, info: ITextureRecorderData): any {
+    protected getTextureVisualState (target: WebGlConstant, storage: WebGLTexture, info: ITextureRecorderData): any {
         try {
             const gl = this.context;
             const visual: any = {};
@@ -127,6 +127,26 @@ export class DrawCallTextureInputState {
                         visual[face.name] = this.getCapture(gl, 0, 0, width, height, info.type);
                     }
                 }
+                else if (info.internalFormat === WebGlConstants.DEPTH24_STENCIL8.value || info.internalFormat === WebGlConstants.DEPTH32F_STENCIL8.value) {
+                    {
+                        let temp = gl.createTexture();
+                        gl.bindTexture(gl.TEXTURE_2D, temp);
+                        if (gl instanceof WebGL2RenderingContext) {
+                            gl.texStorage2D(gl.TEXTURE_2D, textureLevel + 1, gl.RGBA8, width, height);
+                            // console.log('error : ' + gl.getError());
+                        }
+
+                        gl.framebufferTexture2D(
+                            WebGlConstants.FRAMEBUFFER.value, WebGlConstants.COLOR_ATTACHMENT0.value,
+                            WebGlConstants.TEXTURE_2D.value, temp, textureLevel
+                        );
+                        // console.log('error : ' + gl.getError());
+                    }
+
+                    gl.framebufferTexture2D(WebGlConstants.FRAMEBUFFER.value, WebGlConstants.DEPTH_STENCIL_ATTACHMENT.value,
+                        WebGlConstants.TEXTURE_2D.value, storage, textureLevel);
+                    visual[WebGlConstants.TEXTURE_2D.name] = this.getCapture(gl, 0, 0, width, height, info.type);
+                }
                 else {
                     gl.framebufferTexture2D(WebGlConstants.FRAMEBUFFER.value, WebGlConstants.COLOR_ATTACHMENT0.value,
                         WebGlConstants.TEXTURE_2D.value, storage, textureLevel);
@@ -147,10 +167,11 @@ export class DrawCallTextureInputState {
         return undefined;
     }
 
-    protected getCapture(gl: WebGLRenderingContext, x: number, y: number, width: number, height: number, type: number): string {
+    protected getCapture (gl: WebGLRenderingContext, x: number, y: number, width: number, height: number, type: number): string {
         try {
             // Check FBO status.
             const status = this.context.checkFramebufferStatus(WebGlConstants.FRAMEBUFFER.value);
+            // if (status === WebGlConstants.FRAMEBUFFER_INCOMPLETE_ATTACHMENT.value || status === WebGlConstants.FRAMEBUFFER_UNSUPPORTED.value) {
             if (status !== WebGlConstants.FRAMEBUFFER_COMPLETE.value) {
                 return undefined;
             }
@@ -212,7 +233,7 @@ export class DrawCallTextureInputState {
         return undefined;
     }
 
-    protected getWebGlConstant(value: number): string {
+    protected getWebGlConstant (value: number): string {
         const constant = WebGlConstantsByValue[value];
         return constant ? constant.name : value + "";
     }

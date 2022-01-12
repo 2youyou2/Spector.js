@@ -17,23 +17,23 @@ export interface ITextureRecorderData {
 }
 
 export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
-    protected get objectName(): string {
+    protected get objectName (): string {
         return "Texture2d";
     }
 
-    protected getCreateCommandNames(): string[] {
+    protected getCreateCommandNames (): string[] {
         return ["createTexture"];
     }
 
-    protected getUpdateCommandNames(): string[] {
+    protected getUpdateCommandNames (): string[] {
         return ["texImage2D", "compressedTexImage2D", "texStorage2D"];
     }
 
-    protected getDeleteCommandNames(): string[] {
+    protected getDeleteCommandNames (): string[] {
         return ["deleteTexture"];
     }
 
-    protected getBoundInstance(target: number): WebGLTexture {
+    protected getBoundInstance (target: number): WebGLTexture {
         const gl = this.options.context;
         if (target === WebGlConstants.TEXTURE_2D.value) {
             return gl.getParameter(WebGlConstants.TEXTURE_BINDING_2D.value);
@@ -49,7 +49,7 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
         return undefined;
     }
 
-    protected delete(instance: WebGLTexture): number {
+    protected delete (instance: WebGLTexture): number {
         const customData = (instance as any).__SPECTOR_Object_CustomData;
         if (!customData) {
             return 0;
@@ -105,7 +105,7 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
         return customData.length - previousLength;
     }
 
-    private getCustomData(functionInformation: IFunctionInformation, target: string, instance: WebGLTexture): ITextureRecorderData {
+    private getCustomData (functionInformation: IFunctionInformation, target: string, instance: WebGLTexture): ITextureRecorderData {
         if (functionInformation.name === "texImage2D") {
             return this.getTexImage2DCustomData(functionInformation, target, instance);
         }
@@ -161,7 +161,7 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
         return customData;
     }
 
-    private getCompressedTexImage2DCustomData(functionInformation: IFunctionInformation, target: string, instance: WebGLTexture): ITextureRecorderData {
+    private getCompressedTexImage2DCustomData (functionInformation: IFunctionInformation, target: string, instance: WebGLTexture): ITextureRecorderData {
         if (functionInformation.arguments[1] !== 0) {
             // Only manage main lod... so far.
             return undefined;
@@ -185,7 +185,7 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
         return customData;
     }
 
-    private getTexImage2DCustomData(functionInformation: IFunctionInformation, target: string, instance: WebGLTexture): ITextureRecorderData {
+    private getTexImage2DCustomData (functionInformation: IFunctionInformation, target: string, instance: WebGLTexture): ITextureRecorderData {
         if (functionInformation.arguments[1] !== 0) {
             // Only manage main lod... so far.
             return undefined;

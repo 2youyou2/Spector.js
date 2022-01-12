@@ -1,7 +1,7 @@
 import { WebGlConstants } from "../types/webglConstants";
 
 export class ReadPixelsHelper {
-    public static isSupportedCombination(type: number, format: number, internalFormat: number) {
+    public static isSupportedCombination (type: number, format: number, internalFormat: number) {
         // In case of texStorage.
         type = type || WebGlConstants.UNSIGNED_BYTE.value;
         format = format || WebGlConstants.RGBA.value;
@@ -13,7 +13,10 @@ export class ReadPixelsHelper {
         }
 
         // Only reads 8 16 32.
-        if (internalFormat !== WebGlConstants.RGB.value &&
+        if (internalFormat !== WebGlConstants.DEPTH24_STENCIL8.value &&
+            internalFormat !== WebGlConstants.DEPTH32F_STENCIL8.value &&
+            internalFormat !== WebGlConstants.R8.value &&
+            internalFormat !== WebGlConstants.RGB.value &&
             internalFormat !== WebGlConstants.RGBA.value &&
             internalFormat !== WebGlConstants.RGBA8.value &&
             internalFormat !== WebGlConstants.RGBA16F.value &&
@@ -29,17 +32,22 @@ export class ReadPixelsHelper {
         return this.isSupportedComponentType(type);
     }
 
-    public static readPixels(gl: WebGLRenderingContext, x: number, y: number, width: number, height: number, type: number): Uint8Array {
+    public static readPixels (gl: WebGLRenderingContext, x: number, y: number, width: number, height: number, type: number): Uint8Array {
         // Empty error list.
         gl.getError();
 
         // prepare destination storage.
-        const size = width * height * 4;
+        let size = width * height * 4;
         let pixels: ArrayBufferView;
         if (type === WebGlConstants.UNSIGNED_BYTE.value) {
             pixels = new Uint8Array(size);
         }
-        else if (type === 35863/*gl.UNSIGNED_NORMALIZED*/) {
+        else if (type === 35863/*gl.UNSIGNED_NORMALIZED*/ ||
+            type === WebGlConstants.UNSIGNED_INT_24_8.value) {
+            type = gl.UNSIGNED_BYTE;
+            pixels = new Uint8Array(size);
+        }
+        else if (type === WebGlConstants.FLOAT_32_UNSIGNED_INT_24_8_REV.value) {
             type = gl.UNSIGNED_BYTE;
             pixels = new Uint8Array(size);
         }
@@ -73,9 +81,10 @@ export class ReadPixelsHelper {
         return newPixels;
     }
 
-    private static isSupportedComponentType(type: number) {
+    private static isSupportedComponentType (type: number) {
         // Only reads https://www.khronos.org/registry/webgl/specs/latest/2.0/ texImage2D supported combination.
-        if (type !== WebGlConstants.UNSIGNED_BYTE.value &&
+        if (type !== WebGlConstants.FLOAT_32_UNSIGNED_INT_24_8_REV.value &&
+            type !== WebGlConstants.UNSIGNED_BYTE.value &&
             type !== WebGlConstants.UNSIGNED_SHORT_4_4_4_4.value &&
             type !== WebGlConstants.UNSIGNED_SHORT_5_5_5_1.value &&
             type !== WebGlConstants.UNSIGNED_SHORT_5_6_5.value &&
