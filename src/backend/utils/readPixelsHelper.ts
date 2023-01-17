@@ -18,6 +18,8 @@ export class ReadPixelsHelper {
             internalFormat !== WebGlConstants.RGBA8.value &&
             internalFormat !== WebGlConstants.RGBA16F.value &&
             internalFormat !== WebGlConstants.RGBA32F.value &&
+            internalFormat !== WebGlConstants.R32F.value &&
+            internalFormat !== WebGlConstants.R16F.value &&
             internalFormat !== WebGlConstants.RGB16F.value &&
             internalFormat !== WebGlConstants.RGB32F.value &&
             internalFormat !== WebGlConstants.R11F_G11F_B10F.value &&
