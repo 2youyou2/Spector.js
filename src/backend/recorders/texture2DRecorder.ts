@@ -83,10 +83,10 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
             // Float textures is not a rare case
             // WebGL1 does not have RGBA32F, RGBA16F, we need to look in `type` field
             if (internalFormat === WebGlConstants.RGBA.value) {
-                if (customData.type === WebGlConstants.FLOAT.value)  {
+                if (customData.type === WebGlConstants.FLOAT.value) {
                     internalFormat = WebGlConstants.RGBA32F.value;
                 }
-                if (customData.type === WebGlConstants.HALF_FLOAT_OES.value)  {
+                if (customData.type === WebGlConstants.HALF_FLOAT_OES.value) {
                     internalFormat = WebGlConstants.RGBA16F.value;
                 }
             }
@@ -127,6 +127,15 @@ export class Texture2DRecorder extends BaseRecorder<WebGLTexture> {
                 length: 0,
                 isCompressed: false,
             };
+
+            if (customData.internalFormat === WebGlConstants.RGB.value ||
+                customData.internalFormat === WebGlConstants.RGBA.value ||
+                customData.internalFormat === WebGlConstants.RGBA8.value) {
+                customData.type = WebGlConstants.UNSIGNED_BYTE.value
+            }
+            else {
+                customData.type = WebGlConstants.FLOAT.value
+            }
         }
 
         // else NO DATA.
