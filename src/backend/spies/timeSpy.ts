@@ -51,7 +51,7 @@ export class TimeSpy {
             this.lastSixtyFramesDuration[i] = 0;
         }
 
-        this.init();
+        // this.init();
     }
 
     public playNextFrame(): void {
