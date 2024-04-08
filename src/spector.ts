@@ -350,7 +350,7 @@ export class Spector {
                 else {
                     this.onErrorInternal("No frames detected. Try moving the camera or implementing requestAnimationFrame.");
                 }
-            }, 10 * 1000);
+            }, 20 * 1000);
         }
     }
 
